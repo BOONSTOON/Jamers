@@ -10,16 +10,21 @@ public class PlayerMovement : MonoBehaviour
     private const float VERY_SMALL = 0.0001f;
 
     public InputMaster controls;
-    
 
+    //Vector3 movePosition = new Vector3(rb.position.x + offset.x, rb.position.y + offset.y, currentZ);
+    //transform.position = Vector3.SmoothDamp(transform.position, movePosition, ref vel, damping);
 
     // privates that we want to see in editor
     [SerializeField] private float dir = 0.0f;
     [SerializeField] private float maxVel;
     [SerializeField] private float forceMag;
     [SerializeField] private float jumpVel;
-    
+
     [SerializeField] private float decel;
+
+
+    [SerializeField] private bool falling = false;
+    [SerializeField] private float fallingThreshold; // must be negative
 
     private Rigidbody2D rb;
 
@@ -31,58 +36,74 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
+
     }
     public void FixedUpdate()
     {
+        // am i falling?
+        if (rb.velocity.y <= fallingThreshold) falling = true;
+
+
         rb.AddForce(new Vector2(forceMag * dir, 0));
         CapVelocity();
         SlowDown();
+
     }
 
 
     #region PHYSICS
-        private void UpdateVelocity(float dir_) { dir = dir_; }
-        
-        private void CapVelocity()
+    private void UpdateVelocity(float dir_) { dir = dir_; }
+
+    private void CapVelocity()
+    {
+        if (rb.velocity.x > maxVel)
         {
-            if (rb.velocity.x > maxVel)
-            {
-                rb.velocity = new Vector2(maxVel, rb.velocity.y);
-            }
-            if (rb.velocity.x < -maxVel)
-            {
-                rb.velocity = new Vector2(-maxVel, rb.velocity.y);
-            }
+            rb.velocity = new Vector2(maxVel, rb.velocity.y);
+        }
+        if (rb.velocity.x < -maxVel)
+        {
+            rb.velocity = new Vector2(-maxVel, rb.velocity.y);
+        }
+    }
+
+    private void SlowDown()
+    {
+        if (Mathf.Abs(rb.velocity.x) <= VERY_SMALL)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            return;
         }
 
-        private void SlowDown()
+        if (Mathf.Abs(dir) <= 0.5f) // 0.5 minimum input value for joystick
         {
-            if(Mathf.Abs(rb.velocity.x) <= VERY_SMALL)
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y);
-                return;
-            }
-        
-            if(Mathf.Abs(dir) <= 0.5f) // 0.5 minimum input value for joystick
-            {
-                // no more input?
-                // force in the opposite direction to velocity
-                rb.AddForce(new Vector2(Mathf.Abs(rb.velocity.x) / -rb.velocity.x * decel, 0));
-            }
+            // no more input?
+            // force in the opposite direction to velocity
+            rb.AddForce(new Vector2(Mathf.Abs(rb.velocity.x) / -rb.velocity.x * decel, 0));
         }
+    }
 
-        private void Jump()
+    private void Jump()
+    {
+        if (!falling)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpVel);
+            falling = true;
+
         }
+    }
+
     #endregion PHYSICS
 
     #region COLLISIONS
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        if (collision.gameObject.CompareTag("Environment"))
+        {
+            // hit the ground, reset jump
+            falling = false;
+
+        }
     }
 
 
@@ -109,5 +130,7 @@ public class PlayerMovement : MonoBehaviour
     {
         controls.Disable();
     }
-}
+
 #endregion CONTROLS
+
+}
