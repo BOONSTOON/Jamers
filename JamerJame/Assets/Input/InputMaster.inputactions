@@ -94,10 +94,21 @@
                 {
                     "name": "",
                     "id": "2498fc02-d698-47fa-bc56-28ccce42900d",
-                    "path": "<Keyboard>/backspace",
-                    "interactions": "",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "KBM",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b73a6239-e217-4ace-8f93-a9790d5b6a5b",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
