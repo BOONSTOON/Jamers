@@ -4,4 +4,4 @@ dinner time
 
 hello
 
-I facka ya mada
+I don't facka ya mada no more
