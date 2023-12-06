@@ -11,20 +11,20 @@ public class PlayerMovement : MonoBehaviour
 
     public InputMaster controls;
 
-    //Vector3 movePosition = new Vector3(rb.position.x + offset.x, rb.position.y + offset.y, currentZ);
-    //transform.position = Vector3.SmoothDamp(transform.position, movePosition, ref vel, damping);
+    
 
-    // privates that we want to see in editor
-    [SerializeField] private float dir = 0.0f;
-    [SerializeField] private float maxVel;
-    [SerializeField] private float forceMag;
-    [SerializeField] private float jumpVel;
+    // privates that we want to see in editor  //
 
-    [SerializeField] private float decel;
+    [SerializeField] private float dir = 0.0f;          // Input value: -1 to 1
+    [SerializeField] private float maxVel;              // value for clamping velocity
+    [SerializeField] private float forceMag;            // magnitude of the applied force
+    [SerializeField] private float jumpVel;             // magnitude of the jump vel
+
+    [SerializeField] private float decel;               // rate of decceleration after releasing input
 
 
     [SerializeField] private bool falling = false;
-    [SerializeField] private float fallingThreshold; // must be negative
+    [SerializeField] private float fallingThreshold;    // must be negative
 
     private Rigidbody2D rb;
 
