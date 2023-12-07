@@ -11,7 +11,8 @@ public class PlayerMovement : MonoBehaviour
 
     public InputMaster controls;
 
-    
+    public delegate void MyDelegate();
+    public static MyDelegate gettinTapped;
 
     // privates that we want to see in editor  //
 
@@ -36,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
 
     }
     public void FixedUpdate()
@@ -104,6 +106,11 @@ public class PlayerMovement : MonoBehaviour
             falling = false;
 
         }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+
+            gettinTapped?.Invoke();     //check if anything is inside gettinTapped delegate; if so, invoke
+        }
     }
 
 
@@ -125,6 +132,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         controls.Enable();
+        gettinTapped += TakeDamage; //store TakeDamage function in gettinTapped Delegate
     }
     private void OnDisable()
     {
@@ -133,4 +141,8 @@ public class PlayerMovement : MonoBehaviour
 
 #endregion CONTROLS
 
+    public void TakeDamage()
+    {
+        Debug.Log("Collided");      //test collision
+    }
 }
