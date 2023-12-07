@@ -23,7 +23,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float decel;               // rate of decceleration after releasing input
 
 
-    [SerializeField] private bool falling = false;
+    [SerializeField] public bool falling = false;       // true if player is falling; made public so animator can access
+
+    [SerializeField] public bool jumping = false;          // true if player is currently mid-jump; made public so animator can access
     [SerializeField] private float fallingThreshold;    // must be negative
 
     private Rigidbody2D rb;
@@ -41,8 +43,10 @@ public class PlayerMovement : MonoBehaviour
     public void FixedUpdate()
     {
         // am i falling?
-        if (rb.velocity.y <= fallingThreshold) falling = true;
-
+        if (rb.velocity.y <= fallingThreshold) 
+            falling = true;
+        else
+            falling = false;
 
         rb.AddForce(new Vector2(forceMag * dir, 0));
         CapVelocity();
@@ -84,10 +88,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (!falling)
+        if (!falling & !jumping)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpVel);
             falling = true;
+            jumping = true;
 
         }
     }
@@ -102,6 +107,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // hit the ground, reset jump
             falling = false;
+            jumping = false;
 
         }
     }
