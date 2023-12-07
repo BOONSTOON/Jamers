@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Tracking : MonoBehaviour
 {
     public Transform target;                                     //set a objects transform to
