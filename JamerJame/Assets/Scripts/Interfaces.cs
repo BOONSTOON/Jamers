@@ -7,3 +7,9 @@ public interface IDamageable<T>
     void TakeDamage(T damageTaken);
     void Heal(T damageHealed);
 }
+
+public interface ICollectible
+{
+    void Collected();
+
+}
